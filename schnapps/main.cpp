@@ -1,53 +1,43 @@
+/*******************************************************************************
+* SCHNApps                                                                     *
+* Copyright (C) 2015, IGG Group, ICube, University of Strasbourg, France       *
+*                                                                              *
+* This library is free software; you can redistribute it and/or modify it      *
+* under the terms of the GNU Lesser General Public License as published by the *
+* Free Software Foundation; either version 2.1 of the License, or (at your     *
+* option) any later version.                                                   *
+*                                                                              *
+* This library is distributed in the hope that it will be useful, but WITHOUT  *
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        *
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License  *
+* for more details.                                                            *
+*                                                                              *
+* You should have received a copy of the GNU Lesser General Public License     *
+* along with this library; if not, write to the Free Software Foundation,      *
+* Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.           *
+*                                                                              *
+* Web site: http://cgogn.unistra.fr/                                           *
+* Contact information: cgogn@unistra.fr                                        *
+*                                                                              *
+*******************************************************************************/
+
 #include <QApplication>
-#include <QSplashScreen>
-#include <QFileInfo>
+#include <QtQml>
+#include <QtQml/QQmlApplicationEngine>
 
 #include <core/schnapps.h>
-
-// #include <PythonQt.h>
-// #include <gui/PythonQtScriptingConsole.h>
+#include <core/map_handler.h>
+#include <utils/view.h>
 
 int main(int argc, char* argv[])
 {
 	QApplication app(argc, argv);
 
-	QSplashScreen* splash = new QSplashScreen(QPixmap(":splash/cgogn/splash.png"));
-	splash->show();
-	splash->showMessage("Welcome to SCHNApps", Qt::AlignBottom | Qt::AlignCenter);
+	qmlRegisterType<schnapps::SCHNApps>("schnapps", 1, 0, "SCHNApps");
+	qmlRegisterType<schnapps::View>("schnapps", 1, 0, "View");
+	qmlRegisterType<schnapps::MapHandlerListModel>("schnapps", 1, 0, "MapHandlerListModel");
 
-//	// init PythonQt and Python itself
-//	PythonQt::init();
-
-//	QStringList classNames;
-//	classNames.append("View");
-//	classNames.append("Camera");
-//	classNames.append("Plugin");
-//	classNames.append("MapHandlerGen");
-//	PythonQt::self()->registerQObjectClassNames(classNames);
-
-//	// get a smart pointer to the __main__ module of the Python interpreter
-//	PythonQtObjectPtr python_context = PythonQt::self()->getMainModule();
-
-//	PythonQtScriptingConsole* python_console = new PythonQtScriptingConsole(NULL, python_context);
-
-//	schnapps::SCHNApps schnapps(app.applicationDirPath(), python_context, *python_console);
-	schnapps::SCHNApps schnapps(app.applicationDirPath());
-
-//	schnapps.show();
-
-//	python_context.addObject("schnapps", &schnapps);
-
-//	if(argc > 1)
-//	{
-//		QString filename(argv[1]);
-//		QFileInfo fi(filename);
-//		if (fi.exists())
-//			//python_context.evalFile(fi.filePath());
-//			schnapps.loadPythonScriptFromFile(fi.filePath());
-//	}
-
-	splash->finish(&schnapps);
-	delete splash;
+	QQmlApplicationEngine engine(QUrl("qrc:///ui/schnapps.qml"));
 
 	return app.exec();
 }

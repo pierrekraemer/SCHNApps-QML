@@ -46,11 +46,15 @@ find_package(OpenGL REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(PythonLibs 2.7 REQUIRED)
+
 find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Quick REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
 
-#add_subdirectory(thirdparty)
+add_subdirectory(thirdparty)
 
 add_subdirectory(${SCHNAPPS_SOURCE_DIR})
 

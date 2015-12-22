@@ -1,16 +1,31 @@
 add_subdirectory(core)
+add_subdirectory(utils)
 
-project(schnapps_app
+project(schnapps
 	LANGUAGES CXX
 )
 
-add_executable(schnapps
-	main.cpp
+qt5_add_resources(RCC_FILES
+	resources.qrc
 )
 
-qt5_use_modules(schnapps
-	Core Gui OpenGL Xml Svg Widgets
+add_executable(${PROJECT_NAME}
+	main.cpp
+	${RCC_FILES}
 )
-target_link_libraries(schnapps
-	schnapps_core ${QT_LIBRARIES} # PythonQt ${PYTHON_LIBRARIES}
+
+if(NOT MSVC)
+	target_compile_options(${PROJECT_NAME} PUBLIC "-std=c++11")
+endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+	$<BUILD_INTERFACE:${SCHNAPPS_SOURCE_DIR}>
+)
+
+qt5_use_modules(${PROJECT_NAME}
+	Core Gui Quick OpenGL Widgets
+)
+
+target_link_libraries(${PROJECT_NAME}
+	schnapps_core schnapps_utils ${QT_LIBRARIES}
 )
