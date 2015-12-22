@@ -35,36 +35,41 @@ namespace schnapps
 class SCHNApps : public QObject
 {
 	Q_OBJECT
+	Q_PROPERTY(MapHandlerListModel* map_list READ map_list NOTIFY map_list_changed)
 
 public:
 
 	SCHNApps(QObject* parent = nullptr) :
 		QObject(parent)
-	{}
+	{
+		map_list_.add_map(MapHandler("Bunny"));
+		map_list_.add_map(MapHandler("Raptor"));
+	}
 
 	~SCHNApps() override
 	{}
 
+	const QString& app_path() { return app_path_; }
+
+	MapHandlerListModel* map_list() { return &map_list_; }
+
 public slots:
 
-	void load_plugin()
+	void print_status()
 	{
-		std::cout << "load plugin" << std::endl;
+		std::cout << "nb maps : " << map_list_.rowCount() << std::endl;
 	}
 
 	void add_map(const QString& name)
 	{
-		MapHandler* m = new MapHandler(name);
-		map_list_.add(m);
+		map_list_.add_map(MapHandler(name));
 	}
 
-	/**
-	 * @brief  get the file path where application has been launched
-	 * @return the path
-	 */
-	const QString& get_app_path() { return app_path_; }
+signals:
 
-public:
+	void map_list_changed();
+
+private:
 
 	QString app_path_;
 	MapHandlerListModel map_list_;

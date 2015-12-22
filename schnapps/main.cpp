@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <QtQml>
 #include <QtQml/QQmlApplicationEngine>
+#include <QQuickView>
 
 #include <core/schnapps.h>
 #include <core/map_handler.h>
@@ -35,9 +36,16 @@ int main(int argc, char* argv[])
 
 	qmlRegisterType<schnapps::SCHNApps>("schnapps", 1, 0, "SCHNApps");
 	qmlRegisterType<schnapps::View>("schnapps", 1, 0, "View");
-	qmlRegisterType<schnapps::MapHandlerListModel>("schnapps", 1, 0, "MapHandlerListModel");
+	qRegisterMetaType<schnapps::MapHandlerListModel*>("MapHandlerListModel*");
 
-	QQmlApplicationEngine engine(QUrl("qrc:///ui/schnapps.qml"));
+	schnapps::SCHNApps schnapps;
+
+	QQmlApplicationEngine engine;
+	QQmlContext* ctxt = engine.rootContext();
+
+	ctxt->setContextProperty("schnapps", &schnapps);
+
+	engine.load(QUrl("qrc:///ui/schnapps.qml"));
 
 	return app.exec();
 }

@@ -34,10 +34,17 @@ class MapHandler
 public:
 
 	MapHandler(const QString& name) :
-		name_(name)
+		name_(name),
+		dimension_(2)
 	{}
 
+	QString name() const;
+	unsigned int dimension() const;
+
+private:
+
 	QString name_;
+	unsigned int dimension_;
 };
 
 
@@ -53,37 +60,20 @@ public:
 		DimensionRole
 	};
 
-	MapHandlerListModel(QObject* parent = nullptr)
-	{}
+	MapHandlerListModel(QObject* parent = nullptr);
 
-	void add(MapHandler* m)
-	{
-		map_handlers_.append(m);
-	}
+	void add_map(const MapHandler& m);
 
-	virtual int rowCount(const QModelIndex&) const { return map_handlers_.size(); }
-	virtual QVariant data(const QModelIndex& index, int role) const
-	{
-		if(!index.isValid()) {
-			return QVariant();
-		}
-		if(role == NameRole) {
-			return QVariant(map_handlers_[index.row()]->name_);
-		}
-		return QVariant();
-	}
+	int rowCount(const QModelIndex& parent = QModelIndex()) const;
+	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-	QHash<int, QByteArray> roleNames() const
-	{
-		QHash<int, QByteArray> roles;
-		roles[NameRole] = "name";
-		roles[DimensionRole] = "dimension";
-		return roles;
-	}
+protected:
+
+	QHash<int, QByteArray> roleNames() const;
 
 private:
 
-	QVector<MapHandler*> map_handlers_;
+	QList<MapHandler> map_handlers_;
 };
 
 } // namespace schnapps

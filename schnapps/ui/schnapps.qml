@@ -14,10 +14,6 @@ ApplicationWindow {
     width: 1110
     height: 750
 
-    SCHNApps {
-      id: schnapps
-    }
-
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -62,7 +58,9 @@ ApplicationWindow {
             }
             Tab {
                 title: "Maps"
-                ControlTabMap {}
+                ControlTabMap {
+                    id: control_tab_map
+                }
             }
             Tab {
                 title: "Plugins"
@@ -91,11 +89,17 @@ ApplicationWindow {
             Layout.minimumWidth: 100
             Layout.preferredWidth: 250
             Layout.maximumWidth: 250
+
+            Tab {
+                title: "Plugin 1"
+                Rectangle { color: Qt.rgba(0.3, 0, 0.7, 0.7) }
+            }
         }
     }
 
     Component.onCompleted: {
         console.log("SCHNApps loaded");
+        schnapps.print_status();
     }
 
 }
