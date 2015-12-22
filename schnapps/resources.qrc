@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ui/schnapps.qml</file>
+        <file>ui/ControlTabCamera.qml</file>
+        <file>ui/ControlTabMap.qml</file>
+        <file>ui/ControlTabPlugin.qml</file>
+    </qresource>
+</RCC>

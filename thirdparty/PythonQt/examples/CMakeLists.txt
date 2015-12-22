@@ -1,5 +1,0 @@
-add_subdirectory(NicePyConsole)
-add_subdirectory(PyScriptingConsole)
-
-add_custom_target(examples)
-add_dependencies(examples NicePyConsole PyScriptingConsole)
