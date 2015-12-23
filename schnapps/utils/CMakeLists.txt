@@ -3,27 +3,18 @@ project(schnapps_utils
 )
 
 set(HEADER_FILES
-	view.h
 	view_renderer.h
 )
 
 set(SOURCE_FILES
-	view.cpp
 	view_renderer.cpp
 )
 
-qt5_wrap_ui(UIC_FILES
-
-)
-
-qt5_wrap_cpp(MOC_FILES
-	${HEADER_FILES}
-)
+set(CMAKE_AUTOMOC ON)
 
 add_library(${PROJECT_NAME} SHARED
 	${HEADER_FILES}
 	${SOURCE_FILES}
-	${MOC_FILES}
 )
 
 if(NOT MSVC)

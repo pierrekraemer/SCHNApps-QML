@@ -21,7 +21,7 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <utils/view_renderer.h>
+#include <schnapps/utils/view_renderer.h>
 
 namespace schnapps
 {

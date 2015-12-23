@@ -21,11 +21,68 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <core/schnapps.h>
+#include <cassert>
+
+#include <QFileDialog>
+
+#include <schnapps/core/schnapps.h>
 
 namespace schnapps
 {
 
+SCHNApps::SCHNApps(QObject* parent) :
+	QObject(parent)
+{}
 
+SCHNApps::~SCHNApps()
+{}
+
+const QString& SCHNApps::app_path() const
+{
+	return app_path_;
+}
+
+PluginListModel* SCHNApps::plugin_list()
+{
+	return &plugin_list_;
+}
+
+MapHandlerListModel* SCHNApps::map_list()
+{
+	return &map_list_;
+}
+
+void SCHNApps::print_status() const
+{
+	std::cout << "nb maps : " << map_list_.rowCount() << std::endl;
+}
+
+Plugin* SCHNApps::plugin(const QString& name)
+{
+	return plugin_list_.plugin(name);
+}
+
+void SCHNApps::add_plugin()
+{
+	QString file_name = QFileDialog::getOpenFileName(nullptr, "Add plugin", app_path_, "Plugin files (*.so *.dylib)");
+	QFileInfo fi(file_name);
+	if(fi.exists())
+	{
+		Plugin* p = new Plugin(file_name, this);
+		add_plugin(p);
+	}
+}
+
+void SCHNApps::add_plugin(Plugin* p)
+{
+	assert(p != nullptr);
+	plugin_list_.append(p);
+}
+
+void SCHNApps::add_map(MapHandler* map)
+{
+	assert(map != nullptr);
+	map_list_.append(map);
+}
 
 } // namespace schnapps

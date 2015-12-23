@@ -21,34 +21,47 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <QApplication>
-#include <QtQml>
-#include <QtQml/QQmlApplicationEngine>
-#include <QQuickView>
+#include <QFileDialog>
+#include <QFileInfo>
 
-#include <schnapps/core/schnapps.h>
-#include <schnapps/core/plugin.h>
-#include <schnapps/core/map_handler.h>
-#include <schnapps/core/view.h>
+#include <plugins/surface/import/import.h>
 
-int main(int argc, char* argv[])
+namespace schnapps
 {
-	QApplication app(argc, argv);
 
-	qmlRegisterType<schnapps::View>("icube.igg.schnapps", 1, 0, "View");
-
-	qRegisterMetaType<schnapps::MapHandlerListModel*>("MapHandlerListModel*");
-	qRegisterMetaType<schnapps::PluginListModel*>("PluginListModel*");
-	qRegisterMetaType<schnapps::Plugin*>("Plugin*");
-
-	schnapps::SCHNApps schnapps;
-
-	QQmlApplicationEngine engine;
-	QQmlContext* context = engine.rootContext();
-
-	context->setContextProperty("schnapps", &schnapps);
-
-	engine.load(QUrl("qrc:///ui/schnapps.qml"));
-
-	return app.exec();
+bool SurfaceImportPlugin::enable()
+{
+	return true;
 }
+
+void SurfaceImportPlugin::disable()
+{
+
+}
+
+void SurfaceImportPlugin::invoke(const QString& function_name)
+{
+	if (function_name == "import_mesh")
+		return import_mesh();
+	std::cout << "Function does not exist" << std::endl;
+}
+
+void SurfaceImportPlugin::import_mesh()
+{
+	QString file_name = QFileDialog::getOpenFileName(nullptr, "Import mesh", this->schnapps_->app_path(), "Surface mesh files (*.off *.obj)");
+	import_mesh(file_name);
+}
+
+void SurfaceImportPlugin::import_mesh(const QString& file_name)
+{
+	QFileInfo fi(file_name);
+	if(fi.exists())
+	{
+		cgogn::CMap2* map = new cgogn::CMap2();
+		map->import(file_name.toStdString());
+		MapHandler* mh = new MapHandler(file_name, map);
+		this->schnapps_->add_map(mh);
+	}
+}
+
+} // namespace schnapps

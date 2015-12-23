@@ -21,34 +21,34 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <QApplication>
-#include <QtQml>
-#include <QtQml/QQmlApplicationEngine>
-#include <QQuickView>
+#ifndef PLUGIN_SURFACE_IMPORT_H_
+#define PLUGIN_SURFACE_IMPORT_H_
 
 #include <schnapps/core/schnapps.h>
 #include <schnapps/core/plugin.h>
 #include <schnapps/core/map_handler.h>
-#include <schnapps/core/view.h>
 
-int main(int argc, char* argv[])
+namespace schnapps
 {
-	QApplication app(argc, argv);
 
-	qmlRegisterType<schnapps::View>("icube.igg.schnapps", 1, 0, "View");
+class SurfaceImportPlugin : public PluginObject
+{
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "icube.igg.schnapps.PluginObject")
+	Q_INTERFACES(schnapps::PluginObject)
 
-	qRegisterMetaType<schnapps::MapHandlerListModel*>("MapHandlerListModel*");
-	qRegisterMetaType<schnapps::PluginListModel*>("PluginListModel*");
-	qRegisterMetaType<schnapps::Plugin*>("Plugin*");
+public:
 
-	schnapps::SCHNApps schnapps;
+	bool enable() override;
+	void disable() override;
+	void invoke(const QString& function_name) override;
 
-	QQmlApplicationEngine engine;
-	QQmlContext* context = engine.rootContext();
+public slots:
 
-	context->setContextProperty("schnapps", &schnapps);
+	void import_mesh();
+	void import_mesh(const QString& file_name);
+};
 
-	engine.load(QUrl("qrc:///ui/schnapps.qml"));
+} // namespace schnapps
 
-	return app.exec();
-}
+#endif // PLUGIN_SURFACE_IMPORT_H_

@@ -26,6 +26,8 @@
 
 #include <QAbstractListModel>
 
+#include <core/map/cmap2.h>
+
 namespace schnapps
 {
 
@@ -33,17 +35,23 @@ class MapHandler
 {
 public:
 
-	MapHandler(const QString& name) :
+	MapHandler(const QString& name, cgogn::CMap2* map) :
 		name_(name),
+		map_(map),
 		dimension_(2)
 	{}
 
+	~MapHandler()
+	{}
+
 	QString name() const;
+
 	unsigned int dimension() const;
 
 private:
 
 	QString name_;
+	cgogn::CMap2* map_;
 	unsigned int dimension_;
 };
 
@@ -62,7 +70,7 @@ public:
 
 	MapHandlerListModel(QObject* parent = nullptr);
 
-	void add_map(const MapHandler& m);
+	void append(MapHandler* m);
 
 	int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -73,7 +81,7 @@ protected:
 
 private:
 
-	QList<MapHandler> map_handlers_;
+	QList<MapHandler*> map_handlers_;
 };
 
 } // namespace schnapps

@@ -21,34 +21,40 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <QApplication>
-#include <QtQml>
-#include <QtQml/QQmlApplicationEngine>
-#include <QQuickView>
+#ifndef CORE_VIEW_H_
+#define CORE_VIEW_H_
 
-#include <schnapps/core/schnapps.h>
-#include <schnapps/core/plugin.h>
-#include <schnapps/core/map_handler.h>
-#include <schnapps/core/view.h>
+#include <QQuickItem>
+#include <QQuickWindow>
 
-int main(int argc, char* argv[])
+#include <schnapps/utils/view_renderer.h>
+
+namespace schnapps
 {
-	QApplication app(argc, argv);
 
-	qmlRegisterType<schnapps::View>("icube.igg.schnapps", 1, 0, "View");
+class View : public QQuickItem
+{
+	Q_OBJECT
 
-	qRegisterMetaType<schnapps::MapHandlerListModel*>("MapHandlerListModel*");
-	qRegisterMetaType<schnapps::PluginListModel*>("PluginListModel*");
-	qRegisterMetaType<schnapps::Plugin*>("Plugin*");
+public:
 
-	schnapps::SCHNApps schnapps;
+	View();
+	~View();
 
-	QQmlApplicationEngine engine;
-	QQmlContext* context = engine.rootContext();
+public slots:
 
-	context->setContextProperty("schnapps", &schnapps);
+	void sync();
+	void cleanup();
 
-	engine.load(QUrl("qrc:///ui/schnapps.qml"));
+private slots:
 
-	return app.exec();
+	void handle_window_changed(QQuickWindow* win);
+
+private:
+
+	ViewRenderer* renderer_;
+};
+
 }
+
+#endif // CORE_VIEW_H_

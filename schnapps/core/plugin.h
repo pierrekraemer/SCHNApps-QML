@@ -21,40 +21,101 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef UTILS_VIEW_H_
-#define UTILS_VIEW_H_
+#ifndef CORE_PLUGIN_H_
+#define CORE_PLUGIN_H_
 
-#include <QQuickItem>
-#include <QQuickWindow>
-
-#include <utils/view_renderer.h>
+#include <QAbstractListModel>
 
 namespace schnapps
 {
 
-class View : public QQuickItem
+class SCHNApps;
+class PluginObject;
+
+
+class Plugin : public QObject
 {
 	Q_OBJECT
 
 public:
 
-	View();
-	~View();
+	Plugin(const QString& file_name, SCHNApps* schnapps);
+	~Plugin();
+
+	QString name() const;
+	QString file_name() const;
+	bool is_loaded() const;
 
 public slots:
 
-	void sync();
-	void cleanup();
+	void load();
+	void unload();
+	void invoke(const QString& function_name);
 
 private slots:
 
-	void handle_window_changed(QQuickWindow* win);
+private:
+
+	QString name_;
+	QString file_name_;
+	SCHNApps* schnapps_;
+	PluginObject* object_;
+};
+
+
+class PluginObject : public QObject
+{
+	Q_OBJECT
+
+public:
+
+	PluginObject() {}
+	~PluginObject() {}
+
+	virtual bool enable() = 0;
+	virtual void disable() = 0;
+	virtual void invoke(const QString& function_name) = 0;
+
+	void set_schnapps(SCHNApps* s);
+
+protected:
+
+	SCHNApps* schnapps_;
+};
+
+
+class PluginListModel : public QAbstractListModel
+{
+	Q_OBJECT
+
+public:
+
+	enum PluginRoles
+	{
+		NameRole = Qt::UserRole + 1,
+		LoadedRole
+	};
+
+	PluginListModel(QObject* parent = nullptr);
+
+	void append(Plugin* m);
+
+	int rowCount(const QModelIndex& parent = QModelIndex()) const;
+	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+	Plugin* plugin(const QString& name);
+
+protected:
+
+	QHash<int, QByteArray> roleNames() const;
 
 private:
 
-	ViewRenderer* renderer_;
+	QList<Plugin*> plugins_;
 };
 
-}
+} // namespace schnapps
 
-#endif // UTILS_VIEW_H_
+Q_DECLARE_INTERFACE(schnapps::PluginObject, "icube.igg.schnapps.PluginObject")
+
+#endif // CORE_PLUGIN_H_

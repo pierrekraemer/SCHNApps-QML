@@ -16,7 +16,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-set(SCHNAPPS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/schnapps)
+set(SCHNAPPS_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 
 #### RPATH
 if(UNIX)
@@ -39,7 +39,12 @@ setBuildType()
 
 #### Find CGoGN
 set(CGOGN_ROOT_DIR ${CMAKE_SOURCE_DIR}/../CGoGN_2 CACHE STRING "CGoGN root dir")
+set(CGOGN_BUILD_DIR ${CMAKE_SOURCE_DIR}/../CGoGN_2-build CACHE STRING "CGoGN build dir")
 set(CGOGN_SOURCE_DIR ${CGOGN_ROOT_DIR}/cgogn)
+set(CGOGN_LIBRARIES
+	${CGOGN_BUILD_DIR}/lib/libcgogn_core.so
+	${CGOGN_BUILD_DIR}/lib/libcgogn_utils.so
+)
 
 
 find_package(OpenGL REQUIRED)
@@ -55,7 +60,8 @@ find_package(Qt5Widgets REQUIRED)
 
 
 add_subdirectory(thirdparty)
+add_subdirectory(${CGOGN_ROOT_DIR}/thirdparty ${CMAKE_CURRENT_BINARY_DIR}/cgogn_thirdparty)
 
-add_subdirectory(${SCHNAPPS_SOURCE_DIR})
+add_subdirectory(schnapps)
 
 add_subdirectory(plugins)

@@ -4,7 +4,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
 
-import schnapps 1.0
+import icube.igg.schnapps 1.0
 
 ApplicationWindow {
 
@@ -17,10 +17,6 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: "File"
-            MenuItem {
-                text: "Open"
-                onTriggered: schnapps.add_map("bla");
-            }
             MenuItem {
                 text: "Exit"
                 onTriggered: Qt.quit();
@@ -37,10 +33,21 @@ ApplicationWindow {
                 onTriggered: plugin_tab.visible = !plugin_tab.visible;
             }
         }
+        Menu {
+            title: "Plugins"
+            Menu {
+                title: "Surface import"
+                MenuItem {
+                    text: "Import mesh"
+                    onTriggered: {
+                        schnapps.plugin("libsurface_import_plugin_d").invoke("importmesh");
+                    }
+                }
+            }
+        }
     }
 
     RowLayout {
-        id: main_layout
         anchors.fill: parent
 
         TabView {
@@ -58,19 +65,15 @@ ApplicationWindow {
             }
             Tab {
                 title: "Maps"
-                ControlTabMap {
-                    id: control_tab_map
-                }
+                ControlTabMap {}
             }
             Tab {
                 title: "Plugins"
-                Rectangle { color: Qt.rgba(0, 1, 0, 0.7) }
+                ControlTabPlugin {}
             }
         }
 
         View {
-            id: view
-
             Layout.fillWidth: true
             Layout.fillHeight: true
 

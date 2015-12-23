@@ -25,9 +25,12 @@
 #define CORE_SCHNAPPS_H_
 
 #include <iostream>
-#include <QObject>
 
-#include <core/map_handler.h>
+#include <QObject>
+#include <QStandardItemModel>
+
+#include <schnapps/core/plugin.h>
+#include <schnapps/core/map_handler.h>
 
 namespace schnapps
 {
@@ -36,42 +39,38 @@ class SCHNApps : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(MapHandlerListModel* map_list READ map_list NOTIFY map_list_changed)
+	Q_PROPERTY(PluginListModel* plugin_list READ plugin_list NOTIFY plugin_list_changed)
 
 public:
 
-	SCHNApps(QObject* parent = nullptr) :
-		QObject(parent)
-	{
-		map_list_.add_map(MapHandler("Bunny"));
-		map_list_.add_map(MapHandler("Raptor"));
-	}
+	SCHNApps(QObject* parent = nullptr);
+	~SCHNApps() override;
 
-	~SCHNApps() override
-	{}
+	const QString& app_path() const;
 
-	const QString& app_path() { return app_path_; }
-
-	MapHandlerListModel* map_list() { return &map_list_; }
+	PluginListModel* plugin_list();
+	MapHandlerListModel* map_list();
 
 public slots:
 
-	void print_status()
-	{
-		std::cout << "nb maps : " << map_list_.rowCount() << std::endl;
-	}
+	void print_status() const;
 
-	void add_map(const QString& name)
-	{
-		map_list_.add_map(MapHandler(name));
-	}
+	Plugin* plugin(const QString& name);
+	void add_plugin();
+	void add_plugin(Plugin* p);
+
+	void add_map(MapHandler* map);
 
 signals:
 
 	void map_list_changed();
+	void plugin_list_changed();
 
 private:
 
 	QString app_path_;
+
+	PluginListModel plugin_list_;
 	MapHandlerListModel map_list_;
 };
 

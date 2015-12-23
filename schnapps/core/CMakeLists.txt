@@ -4,26 +4,23 @@ project(schnapps_core
 
 set(HEADER_FILES
 	schnapps.h
+	plugin.h
+	view.h
 	map_handler.h
 )
 
 set(SOURCE_FILES
 	schnapps.cpp
+	plugin.cpp
+	view.cpp
 	map_handler.cpp
 )
 
-#qt5_wrap_ui(UIC_FILES
-#
-#)
-
-qt5_wrap_cpp(MOC_FILES
-	${HEADER_FILES}
-)
+set(CMAKE_AUTOMOC ON)
 
 add_library(${PROJECT_NAME} SHARED
 	${HEADER_FILES}
 	${SOURCE_FILES}
-	${MOC_FILES}
 )
 
 if(NOT MSVC)
@@ -35,6 +32,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_d")
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${SCHNAPPS_SOURCE_DIR}>
 	$<BUILD_INTERFACE:${CGOGN_SOURCE_DIR}>
+	$<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
 )
 
 qt5_use_modules(${PROJECT_NAME}
@@ -42,5 +40,6 @@ qt5_use_modules(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
+	${CGOGN_LIBRARIES}
 	${QT_LIBRARIES}
 )
