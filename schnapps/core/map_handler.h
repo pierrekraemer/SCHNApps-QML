@@ -35,14 +35,8 @@ class MapHandler
 {
 public:
 
-	MapHandler(const QString& name, cgogn::CMap2* map) :
-		name_(name),
-		map_(map),
-		dimension_(2)
-	{}
-
-	~MapHandler()
-	{}
+	MapHandler(const QString& name, cgogn::CMap2* map);
+	~MapHandler();
 
 	QString name() const;
 
@@ -81,7 +75,7 @@ protected:
 
 private:
 
-	QList<MapHandler*> map_handlers_;
+	QList<MapHandler*> map_handler_list_;
 };
 
 } // namespace schnapps

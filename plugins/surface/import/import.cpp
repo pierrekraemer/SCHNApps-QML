@@ -59,7 +59,7 @@ void SurfaceImportPlugin::import_mesh(const QString& file_name)
 	{
 		cgogn::CMap2* map = new cgogn::CMap2();
 		map->import(file_name.toStdString());
-		MapHandler* mh = new MapHandler(file_name, map);
+		MapHandler* mh = new MapHandler(fi.baseName(), map);
 		this->schnapps_->add_map(mh);
 	}
 }

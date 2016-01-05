@@ -40,7 +40,7 @@ ApplicationWindow {
                 MenuItem {
                     text: "Import mesh"
                     onTriggered: {
-                        schnapps.plugin("libsurface_import_plugin_d").invoke("importmesh");
+                        schnapps.plugin("libsurface_import_plugin_d").invoke("import_mesh");
                     }
                 }
             }

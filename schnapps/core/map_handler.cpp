@@ -30,6 +30,17 @@ namespace schnapps
  * MapHandler class
  ******************************************************************************/
 
+MapHandler::MapHandler(const QString& name, cgogn::CMap2* map) :
+	name_(name),
+	map_(map),
+	dimension_(2)
+{
+
+}
+
+MapHandler::~MapHandler()
+{}
+
 QString MapHandler::name() const
 {
 	return name_;
@@ -51,22 +62,22 @@ MapHandlerListModel::MapHandlerListModel(QObject* parent) :
 void MapHandlerListModel::append(MapHandler* m)
 {
 	beginInsertRows(QModelIndex(), rowCount(), rowCount());
-	map_handlers_.append(m);
+	map_handler_list_.append(m);
 	endInsertRows();
 }
 
 int MapHandlerListModel::rowCount(const QModelIndex& parent) const
 {
 	Q_UNUSED(parent);
-	return map_handlers_.count();
+	return map_handler_list_.count();
 }
 
 QVariant MapHandlerListModel::data(const QModelIndex& index, int role) const
 {
-	if (index.row() < 0 || index.row() >= map_handlers_.count())
+	if (index.row() < 0 || index.row() >= map_handler_list_.count())
 		return QVariant();
 
-	MapHandler* mh = map_handlers_[index.row()];
+	MapHandler* mh = map_handler_list_[index.row()];
 	if (role == NameRole)
 		return mh->name();
 	else if (role == DimensionRole)

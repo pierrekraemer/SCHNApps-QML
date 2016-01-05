@@ -39,14 +39,13 @@ int main(int argc, char* argv[])
 
 	qRegisterMetaType<schnapps::MapHandlerListModel*>("MapHandlerListModel*");
 	qRegisterMetaType<schnapps::PluginListModel*>("PluginListModel*");
-	qRegisterMetaType<schnapps::Plugin*>("Plugin*");
 
-	schnapps::SCHNApps schnapps;
+	qRegisterMetaType<schnapps::Plugin*>("Plugin*");
 
 	QQmlApplicationEngine engine;
 	QQmlContext* context = engine.rootContext();
 
-	context->setContextProperty("schnapps", &schnapps);
+	schnapps::SCHNApps schnapps(context);
 
 	engine.load(QUrl("qrc:///ui/schnapps.qml"));
 

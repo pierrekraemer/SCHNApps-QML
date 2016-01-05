@@ -28,6 +28,7 @@
 #include <QFileInfo>
 
 #include <schnapps/core/plugin.h>
+#include <schnapps/core/schnapps.h>
 
 namespace schnapps
 {
@@ -47,9 +48,7 @@ Plugin::Plugin(const QString& file_name, SCHNApps* schnapps) :
 }
 
 Plugin::~Plugin()
-{
-	std::cout << "plugin destroyed : " << name_.toStdString() << std::endl;
-}
+{}
 
 QString Plugin::name() const
 {
@@ -125,25 +124,25 @@ PluginListModel::PluginListModel(QObject* parent) :
 	QAbstractListModel(parent)
 {}
 
-void PluginListModel::append(Plugin* m)
+void PluginListModel::append(Plugin* p)
 {
 	beginInsertRows(QModelIndex(), rowCount(), rowCount());
-	plugins_.append(m);
+	plugin_list_.append(p);
 	endInsertRows();
 }
 
 int PluginListModel::rowCount(const QModelIndex& parent) const
 {
 	Q_UNUSED(parent);
-	return plugins_.count();
+	return plugin_list_.count();
 }
 
 QVariant PluginListModel::data(const QModelIndex& index, int role) const
 {
-	if (index.row() < 0 || index.row() >= plugins_.count())
+	if (index.row() < 0 || index.row() >= plugin_list_.count())
 		return QVariant();
 
-	Plugin* p = plugins_[index.row()];
+	Plugin* p = plugin_list_[index.row()];
 	if (role == NameRole)
 		return p->name();
 	else if (role == LoadedRole)
@@ -153,14 +152,10 @@ QVariant PluginListModel::data(const QModelIndex& index, int role) const
 
 Plugin* PluginListModel::plugin(const QString& name)
 {
-	std::cout << "nb plugins : " << plugins_.count() << std::endl;
-	foreach (Plugin* p, plugins_) {
-		std::cout << "plugin @ : " << p << std::endl;
-		std::cout << "plugin name : " << p->name().toStdString() << std::endl;
+	foreach (Plugin* p, plugin_list_) {
 		if (p->name() == name)
 			return p;
 	}
-	return nullptr;
 }
 
 QHash<int, QByteArray> PluginListModel::roleNames() const

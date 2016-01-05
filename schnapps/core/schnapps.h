@@ -27,6 +27,8 @@
 #include <iostream>
 
 #include <QObject>
+#include <QQmlEngine>
+#include <QQmlContext>
 #include <QStandardItemModel>
 
 #include <schnapps/core/plugin.h>
@@ -38,18 +40,18 @@ namespace schnapps
 class SCHNApps : public QObject
 {
 	Q_OBJECT
-	Q_PROPERTY(MapHandlerListModel* map_list READ map_list NOTIFY map_list_changed)
-	Q_PROPERTY(PluginListModel* plugin_list READ plugin_list NOTIFY plugin_list_changed)
+	Q_PROPERTY(MapHandlerListModel* map_list READ map_list_model NOTIFY map_list_changed)
+	Q_PROPERTY(PluginListModel* plugin_list READ plugin_list_model NOTIFY plugin_list_changed)
 
 public:
 
-	SCHNApps(QObject* parent = nullptr);
+	SCHNApps(QQmlContext* qml_context, QObject* parent = nullptr);
 	~SCHNApps() override;
 
 	const QString& app_path() const;
 
-	PluginListModel* plugin_list();
-	MapHandlerListModel* map_list();
+	MapHandlerListModel* map_list_model();
+	PluginListModel* plugin_list_model();
 
 public slots:
 
@@ -69,9 +71,10 @@ signals:
 private:
 
 	QString app_path_;
+	QQmlContext* qml_context_;
 
-	PluginListModel plugin_list_;
-	MapHandlerListModel map_list_;
+	PluginListModel plugin_list_model_;
+	MapHandlerListModel map_list_model_;
 };
 
 } // namespace schnapps

@@ -22,6 +22,7 @@
 *******************************************************************************/
 
 #include <schnapps/utils/view_renderer.h>
+#include <iostream>
 
 namespace schnapps
 {
@@ -40,6 +41,8 @@ void ViewRenderer::paint()
 	if (!program_)
 	{
 		initializeOpenGLFunctions();
+
+		std::cout << glGetString(GL_VERSION) << std::endl;
 
 		program_ = new QOpenGLShaderProgram();
 

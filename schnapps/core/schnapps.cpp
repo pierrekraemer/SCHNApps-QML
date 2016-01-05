@@ -30,9 +30,12 @@
 namespace schnapps
 {
 
-SCHNApps::SCHNApps(QObject* parent) :
-	QObject(parent)
-{}
+SCHNApps::SCHNApps(QQmlContext* qml_context, QObject* parent) :
+	QObject(parent),
+	qml_context_(qml_context)
+{
+	qml_context_->setContextProperty("schnapps", this);
+}
 
 SCHNApps::~SCHNApps()
 {}
@@ -42,24 +45,25 @@ const QString& SCHNApps::app_path() const
 	return app_path_;
 }
 
-PluginListModel* SCHNApps::plugin_list()
+MapHandlerListModel* SCHNApps::map_list_model()
 {
-	return &plugin_list_;
+	return &map_list_model_;
 }
 
-MapHandlerListModel* SCHNApps::map_list()
+PluginListModel* SCHNApps::plugin_list_model()
 {
-	return &map_list_;
+	return &plugin_list_model_;
 }
 
 void SCHNApps::print_status() const
 {
-	std::cout << "nb maps : " << map_list_.rowCount() << std::endl;
+	std::cout << "nb maps : " << map_list_model_.rowCount() << std::endl;
+	std::cout << "nb plugins : " << plugin_list_model_.rowCount() << std::endl;
 }
 
 Plugin* SCHNApps::plugin(const QString& name)
 {
-	return plugin_list_.plugin(name);
+	return plugin_list_model_.plugin(name);
 }
 
 void SCHNApps::add_plugin()
@@ -69,6 +73,7 @@ void SCHNApps::add_plugin()
 	if(fi.exists())
 	{
 		Plugin* p = new Plugin(file_name, this);
+		QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
 		add_plugin(p);
 	}
 }
@@ -76,13 +81,13 @@ void SCHNApps::add_plugin()
 void SCHNApps::add_plugin(Plugin* p)
 {
 	assert(p != nullptr);
-	plugin_list_.append(p);
+	plugin_list_model_.append(p);
 }
 
 void SCHNApps::add_map(MapHandler* map)
 {
 	assert(map != nullptr);
-	map_list_.append(map);
+	map_list_model_.append(map);
 }
 
 } // namespace schnapps

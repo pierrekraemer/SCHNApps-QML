@@ -98,7 +98,7 @@ public:
 
 	PluginListModel(QObject* parent = nullptr);
 
-	void append(Plugin* m);
+	void append(Plugin* p);
 
 	int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -111,7 +111,7 @@ protected:
 
 private:
 
-	QList<Plugin*> plugins_;
+	QList<Plugin*> plugin_list_;
 };
 
 } // namespace schnapps
